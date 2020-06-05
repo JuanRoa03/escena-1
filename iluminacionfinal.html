@@ -1,0 +1,488 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <title>ILUMINACION</title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <script src="js/three.js"></script>    
+    <script src="js/controls/OrbitControls.js"></script>
+    <script src="js/csg.js"></script>
+		<script src="js/THREE.CSG.js"></script>
+    <script>
+		var scene, aspect, camera, renderer,controls;
+    var ambientLight,light;
+    var USE_WIREFRAME = false;
+		
+		init();
+		animate();
+	
+		function init(){
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color( 0xAAAAAA );
+        aspect = window.innerWidth / window.innerHeight;
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        camera = new THREE.PerspectiveCamera( 45, aspect, 0.1, 1000);
+        renderer.shadowMap.enabled = true;// IMP
+	      renderer.shadowMap.type = THREE.BasicShadowMap;
+        document.body.appendChild( renderer.domElement );
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
+				  
+        var size = 20;
+        var arrowSize = 1;
+        var divisions = 25;
+        var origin = new THREE.Vector3( 0, 0, 0 );
+        var x = new THREE.Vector3( 1, 0, 0 );
+        var y = new THREE.Vector3( 0, 1, 0 );
+		  	var z = new THREE.Vector3( 0, 0, 1 );
+			  var color1 = new THREE.Color( 0x848B8E );
+		  	var color2 = new THREE.Color( 0x333333 );
+		  	var colorR = new THREE.Color( 0xAA3333 );
+		  	var colorG = new THREE.Color( 0x33AA33 );
+		  	var colorB = new THREE.Color( 0x333366 );
+		  
+		  	//CREAR LAS GRILLAS PARA EL ESCENARIO
+		  	var axesHelper = new THREE.AxesHelper( size );
+		  	var gridHelperXY = new THREE.GridHelper( size, divisions, color1, color1);
+		  	var gridHelperXZ = new THREE.GridHelper( size, divisions, color2, color2 );
+		  	var gridHelperYZ = new THREE.GridHelper( size, divisions, color1, color1 );
+            
+        //ROTARLAS PARA QUE QUEDEN EN EL ESPACIO ADECUADO
+        gridHelperXY.rotateOnWorldAxis ( x, THREE.Math.degToRad(90) );
+        gridHelperXZ.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+        gridHelperYZ.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
+            
+        //CREAR LAS FLECHAS QUE INDICAN LOS EJES DE COORDENADAS 3D
+        var arrowX = new THREE.ArrowHelper( x, origin, arrowSize, colorR );
+        var arrowY = new THREE.ArrowHelper( y, origin, arrowSize, colorG );
+        var arrowZ = new THREE.ArrowHelper( z, origin, arrowSize, colorB );
+			
+        //CREAR ILUMINACIÓN
+        ambientLight = new THREE.AmbientLight(0x233D4D,0.1);
+        scene.add(ambientLight);	
+        
+        light = new THREE.PointLight(0xB2DDF6,1,100,3);
+        light.position.set(5,12,-6);
+        light.castShadow = true;
+        light.shadow.camera.near = 2;
+        light.shadow.camera.far = 25;
+        scene.add(light);
+        
+      
+            
+			  //CREAR LOS MATERIALES    
+/////////////////////////////////////////////////
+
+var material1 = new THREE.MeshStandardMaterial( { color: colorR, metalness: 0.5, roughness: 0.1 } );
+var madera=new THREE.MeshStandardMaterial( { color: 0x43260B, metalness: .9, roughness: 0.5 } );
+var material = new THREE.MeshPhongMaterial( { color: 0xFFFFFF } );
+var material2 = new THREE.MeshPhongMaterial( { color: 0x002F87 } );
+var metal=new THREE.MeshStandardMaterial( { color: 0xFFFFFF, metalness: 0.5, roughness: 0.5 } );
+var madera2 = new THREE.MeshLambertMaterial ( { color: 0x863A35, reflectivity: 0.5 , refractionRatio: 0.5 });
+var pintura = new THREE.MeshPhongMaterial({color:0x3A6384});
+var tela = new THREE.MeshStandardMaterial( { color: 0x000000, metalness: 0.5, roughness: 0.5 } );
+var tela2 = new THREE.MeshPhongMaterial({color:0xA74630});
+/////////////////////////////////////////////////
+        var refle = new THREE.MeshLambertMaterial ( { color: 0xFFFFFF, reflectivity: 0.5 , refractionRatio: 0.5 });   
+        var gris = new THREE.MeshStandardMaterial( { color: 0xFFFFFF, metalness: 0.5, roughness: 0.5 } );     
+        var matpiso = new THREE.MeshPhongMaterial({color:0xffffff, wireframe:USE_WIREFRAME})
+   
+      
+        
+
+
+			  //CREAR LAS GEOMETRÍAS
+
+////////////////////////////////////////////////////////////
+
+
+var boxgeo = new THREE.BoxGeometry( 12,1, 5.5);
+var boxgeo2 = new THREE.BoxGeometry( 11.8,1, 5.3);
+var boxgeo3 = new THREE.BoxGeometry( 10,1, 5.4);
+var patas = new THREE.CylinderGeometry( 0.35, 0.2, 0.75, 32 );
+var patas2 = new THREE.CylinderGeometry( 0.35, 0.2, 1, 32 );
+var mesa1 = new THREE.BoxGeometry( 3.5,2.5, 3.5);
+var patamesa = new THREE.BoxGeometry( 0.5,2.85, 0.5);
+var m1 = new THREE.BoxGeometry( 4.5,0.5, 4.5);
+var mlarga = new THREE.BoxGeometry( 4,0.25, 10);
+var mlarga2 = new THREE.BoxGeometry( 4,3.5, 0.25);
+var mlarga3 = new THREE.BoxGeometry( 4,0.25, 6);
+ var ventana = new THREE.BoxGeometry(  0.25, 4.5, 8.5 );
+var pared = new THREE.BoxGeometry( 20, 10, 0.1 );
+var piso = new THREE.BoxGeometry( 20, 0.1, 20 );
+var cortina = new THREE.BoxGeometry(  0.1, 4,8);
+
+var sillat = new THREE.CylinderGeometry( 0.35, 2, 0.5, 32 );
+var sillat2 = new THREE.CylinderGeometry( 0.35, 0.35, 2, 32 );
+var sillat3 = new THREE.CylinderGeometry( 0.2, 0.2, 2, 32 );
+
+var boxgeo4 = new THREE.BoxGeometry( 3.5,1.25, 3.5);
+var boxgeo5 = new THREE.BoxGeometry( 1.25,6, 3);
+var boxgeo6 = new THREE.BoxGeometry( 2.5,0.85, 2.3);
+///////////////////////////////////////////////////////////
+
+
+
+
+       
+       
+        
+        var pareda = new THREE.BoxGeometry( 20, 7.5, 0.1 );
+        
+
+
+
+
+
+                         //malla
+///////////////////////////////////////////////////////////
+
+var camabase = new THREE.Mesh( boxgeo, madera );
+camabase.position.y = 1.2;
+camabase.position.x = 4;
+camabase.position.z = 7;
+var cama = new THREE.Mesh( boxgeo2, material );
+cama.position.y = 2;
+cama.position.x = 4;
+cama.position.z = 7;
+var cubre = new THREE.Mesh( boxgeo3, material2 );
+cubre.position.y = 2.3;
+cubre.position.x = 3;
+cubre.position.z = 7;
+var pata1 = new THREE.Mesh( patas, metal );
+pata1.position.y = 0.35;
+pata1.position.x = -1;
+pata1.position.z = 9;
+var pata2 = new THREE.Mesh( patas, metal );
+pata2.position.y = 0.35;
+pata2.position.x = 9;
+pata2.position.z = 9;
+var pata3 = new THREE.Mesh( patas, metal );
+pata3.position.y = 0.35;
+pata3.position.x = -1;
+pata3.position.z = 5;
+var pata4 = new THREE.Mesh( patas, metal );
+pata4.position.y = 0.35;
+pata4.position.x = 9;
+pata4.position.z = 5;
+var smesa1 = new THREE.Mesh( mesa1, madera2 );
+smesa1.position.y = 1.75;
+smesa1.position.x = 7.5;
+smesa1.position.z = 2;
+var patamesa1 = new THREE.Mesh( patamesa, madera2 );
+patamesa1.position.y = 1.4;
+patamesa1.position.x = 9;
+patamesa1.position.z = 0.5;
+var patamesa2 = new THREE.Mesh( patamesa, madera2 );
+patamesa2.position.y = 1.4;
+patamesa2.position.x = 9;
+patamesa2.position.z = 3.5;
+var patamesa3 = new THREE.Mesh( patamesa, madera2 );
+patamesa3.position.y = 1.4;
+patamesa3.position.x = 6;
+patamesa3.position.z = 3.5;
+var patamesa4 = new THREE.Mesh( patamesa, madera2 );
+patamesa4.position.y = 1.4;
+patamesa4.position.x =6;
+patamesa4.position.z = 0.5;
+var cubrem = new THREE.Mesh( m1, madera2 );
+cubrem.position.y = 3;
+cubrem.position.x =7.5;
+cubrem.position.z = 2;
+
+var mesa2b = new THREE.Mesh( mlarga, madera2 );
+mesa2b.position.y = 1;
+mesa2b.position.x =-7.5;
+mesa2b.position.z = -4;
+
+var mesa2b2 = new THREE.Mesh( mlarga, madera2 );
+mesa2b2.position.y = 4.5;
+mesa2b2.position.x =-7.5;
+mesa2b2.position.z = -4;
+
+var mesa2s = new THREE.Mesh( mlarga2, madera2 );
+mesa2s.position.y = 2.8;
+mesa2s.position.x =-7.5;
+mesa2s.position.z = -1;
+
+
+var mesa2s2 = new THREE.Mesh( mlarga2, madera2 );
+mesa2s2.position.y = 2.8;
+mesa2s2.position.x =-7.5;
+mesa2s2.position.z = -7;
+
+var mesa2b3 = new THREE.Mesh( mlarga, madera2 );
+mesa2b3.position.y = 3;
+mesa2b3.position.x =-9.5;
+mesa2b3.position.z = -4;
+mesa2b3.rotation.z = Math.PI/2;
+
+var mesa2b4 = new THREE.Mesh( mlarga3, madera2 );
+mesa2b4.position.y = 3.5;
+mesa2b4.position.x =-7.5;
+mesa2b4.position.z = -4;
+
+var pata5 = new THREE.Mesh( patas2, metal );
+pata5.position.y = 0.5;
+pata5.position.x = -9;
+pata5.position.z = 0;
+
+var pata6 = new THREE.Mesh( patas2, metal );
+pata6.position.y = 0.5;
+pata6.position.x = -6.5;
+pata6.position.z = 0;
+
+var pata7 = new THREE.Mesh( patas2, metal );
+pata7.position.y = 0.5;
+pata7.position.x = -9;
+pata7.position.z = -8;
+
+var pata8 = new THREE.Mesh( patas2, metal );
+pata8.position.y = 0.5;
+pata8.position.x = -6.5;
+pata8.position.z = -8;
+
+var ventana1= new THREE.Mesh(ventana,refle);
+ventana1.position.y = 7;	
+ventana1.position.z = -4;
+ventana1.position.x = -9.75;
+
+var pared1 = new THREE.Mesh(pared,pintura);
+pared1.position.y = 5;	
+        pared1.position.z = 10;
+        var pared2 = new THREE.Mesh(pared,pintura);
+  pared2.position.y = 5;	
+        pared2.position.x = -10;
+pared2.rotation.y = Math.PI/2
+
+var cortina1= new THREE.Mesh(cortina,tela);
+cortina1.position.y = 7;	
+cortina1.position.z = -4;
+cortina1.position.x = -9.55;
+
+var barra = new THREE.Mesh( sillat, metal );
+barra.position.y = 0;
+barra.position.x = 2;
+barra.position.z = -3.5;
+
+var barra2 = new THREE.Mesh( sillat2, metal );
+barra2.position.y = 1;
+barra2.position.x = 2;
+barra2.position.z = -3.5;
+
+var barra3 = new THREE.Mesh( sillat3, metal );
+barra3.position.y = 2;
+barra3.position.x = 2;
+barra3.position.z = -3.5;
+
+var asiento = new THREE.Mesh( boxgeo4, tela2 );
+asiento.position.y = 3.5;
+asiento.position.x = 2;
+asiento.position.z = -3.5;
+var asiento2 = new THREE.Mesh( boxgeo5, tela2 );
+asiento2.position.y = 6;
+asiento2.position.x = 4;
+asiento2.position.z = -3.5;
+asiento2.rotation.z = Math.PI*5/6
+//asiento2.rotation.y = Math.PI/6
+
+var consola = new THREE.Mesh( boxgeo6, tela );
+consola.position.y = 5;
+consola.position.x = -7.4;
+consola.position.z = -4;
+///////////////////////////////////////////////////////////
+
+
+
+
+
+                        //a csg
+//////////////////////////////////////////////////////////
+
+var boxCSG = THREE.CSG.fromMesh( camabase );
+var box2CSG = THREE.CSG.fromMesh( cama);
+var box3CSG = THREE.CSG.fromMesh( cubre);
+var cilinderCSG = THREE.CSG.fromMesh( pata1);
+var cilinderCSG = THREE.CSG.fromMesh( pata2);
+var box4CSG = THREE.CSG.fromMesh( smesa1);
+var box5CSG = THREE.CSG.fromMesh( patamesa1);
+var box6CSG = THREE.CSG.fromMesh( patamesa2);
+var box7CSG = THREE.CSG.fromMesh( patamesa3);
+var box8CSG = THREE.CSG.fromMesh( patamesa4);
+var box9CSG = THREE.CSG.fromMesh( cubrem);
+//////////////////////////////////////////////////////////
+        
+
+
+
+
+
+ //APLICAR LAS OPERACIONES
+//////////////////////////////////////////////////////////////////////////////////////////
+			var result = boxCSG;
+                        caja1 = THREE.CSG.toMesh( result );
+                       caja1.material = material1;
+                       
+                       var result2=box4CSG.union( box5CSG ).union( box6CSG ).union( box7CSG ).union( box8CSG ).union( box9CSG );
+                        mesanoche= THREE.CSG.toMesh( result2 );
+                        mesanoche.material=madera2;
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+        
+       
+        var PISO = new THREE.Mesh(piso,matpiso);
+        
+        
+
+
+
+
+camabase.receiveShadow = true;
+        camabase.castShadow = true;
+cama.receiveShadow = true;
+        cama.castShadow = true;
+cubre.receiveShadow = true;
+        cubre.castShadow = true;
+pata1.receiveShadow = true;
+        pata1.castShadow = true;
+pata2.receiveShadow = true;
+        pata2.castShadow = true;
+pata3.receiveShadow = true;
+       pata3.castShadow = true;
+pata4.receiveShadow = true;
+       pata4.castShadow = true;
+cubrem.receiveShadow = true;
+       cubrem.castShadow = true;
+mesa2b.receiveShadow = true;
+       mesa2b.castShadow = true;
+mesa2b2.receiveShadow = true;
+       mesa2b2.castShadow = true;
+mesa2s.receiveShadow = true;
+       mesa2s.castShadow = true;
+mesa2s2.receiveShadow = true;
+       mesa2s2.castShadow = true;
+mesa2b3.receiveShadow = true;
+       mesa2b3.castShadow = true;
+mesa2b4.receiveShadow = true;
+       mesa2b4.castShadow = true;
+ mesanoche.receiveShadow = true;
+        mesanoche.castShadow = true;
+pata5.receiveShadow = true;
+        pata5.castShadow = true;
+pata6.receiveShadow = true;
+        pata6.castShadow = true;
+pata7.receiveShadow = true;
+       pata7.castShadow = true;
+pata8.receiveShadow = true;
+       pata8.castShadow = true;
+PISO.receiveShadow = true;
+
+pared1.receiveShadow = true;
+pared2.receiveShadow = true;
+
+cortina1.receiveShadow = true;
+       cortina1.castShadow = true;
+
+barra.receiveShadow = true;
+       barra.castShadow = true;
+
+barra2.receiveShadow = true;
+       barra2.castShadow = true;
+
+barra3.receiveShadow = true;
+       barra3.castShadow = true;
+
+asiento.receiveShadow = true;
+       asiento.castShadow = true; 
+
+
+asiento2.receiveShadow = true;
+       asiento2.castShadow = true;      
+      
+		  	//AGREGAR A LA ESCENA
+
+
+//////////////////////////////////////////
+
+scene.add( caja1 );
+scene.add(cama);
+scene.add(cubre);
+scene.add(pata1);
+scene.add(pata2);
+scene.add(pata3);
+scene.add(pata4);
+scene.add(mesanoche);
+scene.add(mesa2b);
+scene.add(mesa2b2);
+scene.add(mesa2b3);
+scene.add(mesa2b4);
+scene.add(mesa2s);
+scene.add(mesa2s2);
+scene.add(pata5);
+scene.add(pata6);
+scene.add(pata7);
+scene.add(pata8);
+scene.add(cortina1);
+scene.add(barra);
+scene.add(barra2);
+scene.add(barra3);
+scene.add(asiento);
+scene.add(asiento2);
+scene.add(consola);
+/////////////////////////////////////////
+
+
+
+
+        gridHelperXY.position.z=-10.1;
+        gridHelperXY.position.x=0.1;
+        gridHelperXY.position.y=1.3;  
+        gridHelperYZ.position.x=-9.8;
+        gridHelperYZ.position.z=0.1;
+        gridHelperYZ.position.y=1.3;  
+		  	//scene.add( gridHelperXY );
+		  	//scene.add( gridHelperYZ );
+        //scene.add( gridHelperXZ );
+		  	scene.add( arrowX );	
+		  	scene.add( arrowY );	
+		  	scene.add( arrowZ );
+        
+        
+       
+        
+        
+      
+        ;
+        
+       
+        PISO.receiveShadow = true;
+       
+			  scene.add( ventana1);
+			 
+			  scene.add( pared1);
+			  scene.add( pared2);
+			
+			  scene.add( PISO);
+        camera.position.x = 25;
+        camera.position.y = 25;	 
+        camera.position.z = 25;
+        camera.lookAt( 0, 0, 0 );
+			}
+    
+    function animate() {
+        requestAnimationFrame( animate );
+        controls.update()
+        render();
+    }
+    
+    function render(){
+        renderer.render( scene, camera );
+    }
+    </script>
+  </body>
+</html>
